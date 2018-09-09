@@ -12,7 +12,7 @@ CFLAGS		= -I ../include/ -c -fno-builtin -fno-stack-protector -Wall
 LDFLAGS		= -Ttext 0x1000
 DASMFLAGS	= -D
 LIB		= ../lib/orangescrt.a
-BIN		= echo
+BIN		= echo minesweeper
 
 # All Phony Targets
 .PHONY : everything final clean realclean disasm all install
@@ -47,8 +47,8 @@ echo.o: echo.c ../include/type.h ../include/stdio.h
 echo : echo.o start.o $(LIB)
 	$(LD) $(LDFLAGS) -o $@ $?
 
-pwd.o: pwd.c ../include/type.h ../include/stdio.h
+minesweeper.o: minesweeper.c ../include/type.h ../include/stdio.h
 	$(CC) $(CFLAGS) -o $@ $<
 
-pwd : pwd.o start.o $(LIB)
+minesweeper : minesweeper.o start.o $(LIB)
 	$(LD) $(LDFLAGS) -o $@ $?

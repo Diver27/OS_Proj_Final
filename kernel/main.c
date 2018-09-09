@@ -414,7 +414,7 @@ PRIVATE void showCmdList(){
 			"=============================================================================\n"
 			"help      :  Show the list of all shell commands.\n"
 			"echo      :  Print the arguments to the screen.\n"
-			"ms        :  Start Minesweeper game.\n"	
+			"minesweeper:  Start Minesweeper game.\n"	
 			"=============================================================================\n");
 	return 0;
 }

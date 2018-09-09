@@ -198,10 +198,10 @@ int sweepMine(int x, int y){//扫雷函数，踩到雷返回1，没有踩到雷�
     return 0;
 }
 
-void clearScreen(){
+void clearScreen(){/*
     for (int i = 0; i < 20; i++) {
         printf("\n");
-    }
+    }*/
 }
 
 void pin(int x, int y) {
@@ -226,13 +226,14 @@ void game() {
     while (1) {
         int result = 0;
         char bufr[128];
+	memset(bufr,0,128);
         read(0, bufr, 128);
         if (bufr[0] == 's') {
             if(startFlag == 1){
-                safeSweep(bufr[2],bufr[4]);
+                safeSweep(bufr[2]-'0',bufr[4]-'0');
                 startFlag--;
             } else{
-                result = sweepMine(bufr[2],bufr[4]); //踩到雷返回1，没有踩到雷返回0
+                result = sweepMine(bufr[2]-'0',bufr[4]-'0'); //踩到雷返回1，没有踩到雷返回0
             }
         } else if (bufr[0] == 'm'){
             return;
@@ -240,13 +241,13 @@ void game() {
             clearScreen();
             printRealMap();
         } else if (bufr[0] == 'p'){
-            pin(bufr[2], bufr[4]);
+            pin(bufr[2]-'0',bufr[4]-'0');
         } else if (bufr[0] == 'u'){
-            unpin(bufr[2], bufr[4]);
+            unpin(bufr[2]-'0',bufr[4]-'0');
         } else if (bufr[0] == 'c'){
             printCommandList();
         } else if (bufr[0] == 'n'){
-            safeSweep(bufr[2], bufr[4]);
+            safeSweep(bufr[2]-'0',bufr[4]-'0');
         }
         if (countLeftUnknown() == MINENUM){
             printf("__  __                      ___       __               \n"
@@ -273,25 +274,23 @@ void game() {
 
 int main() {
     int input = 0;
-    printStartPage();
+    //printStartPage();
     while(1) {
         char bufr[128];
+	memset(bufr,0,128);
         read(0, bufr, 128);
-        //scanf("%d", &input);
         //switch (input) {
-        switch(bufr[0]){
-            case 1:
+        if(bufr[0]=='1'){
                 game();
-                break;
-            case 2:
+               }else if(bufr[0]=='2'){
                 printCommandList();
-                break;
-            case 0:
+                }else if(bufr[0]=='0'){
+            
                 return 0;//退出游戏
-            default:
-                printf("选项无效，重新输入\n");
-                break;
+            }
+		else{
+                printf("Invalid\n");
         }
-        printStartPage();
+        //printStartPage();
     }
 }
