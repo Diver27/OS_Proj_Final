@@ -232,25 +232,6 @@ void untar(const char * filename)
  * 
  * @param tty_name  TTY file name.
  *****************************************************************************/
-
-int currentTime(){
-	struct time t=get_time_RTC();
-	printf("%d/%d/%d %d:%d:%d\n",t.year,t.month,t.day,t.hour,t.minute,t.second);
-	return 0;
-}
-
-
-
-
- PRIVATE int get_commands(int argc, char* argv[]) {
-	if(strcmp(argv[0], "time") == 0)
-		return currentTime();
-	return -2;
-}
-
-
-
-
 void shabby_shell(const char * tty_name)
 {
 	int fd_stdin  = open(tty_name, O_RDWR);
@@ -285,12 +266,6 @@ void shabby_shell(const char * tty_name)
 			p++;
 		} while(ch);
 		argv[argc] = 0;
-
-
-		int ret = get_commands(argc, argv);
-		if(ret != -2) continue;
-
-
 
 		int fd = open(argv[0], O_RDWR);
 		if (fd == -1) {
