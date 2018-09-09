@@ -232,6 +232,25 @@ void untar(const char * filename)
  * 
  * @param tty_name  TTY file name.
  *****************************************************************************/
+
+int currentTime(){
+	struct time t=get_time_RTC();
+	printf("%d/%d/%d %d:%d:%d\n",t.year,t.month,t.day,t.hour,t.minute,t.second);
+	return 0;
+}
+
+
+
+
+ PRIVATE int get_commands(int argc, char* argv[]) {
+	if(strcmp(argv[0], "time") == 0)
+		return currentTime();
+	return -2;
+}
+
+
+
+
 void shabby_shell(const char * tty_name)
 {
 	int fd_stdin  = open(tty_name, O_RDWR);
@@ -267,6 +286,12 @@ void shabby_shell(const char * tty_name)
 		} while(ch);
 		argv[argc] = 0;
 
+
+		int ret = get_commands(argc, argv);
+		if(ret != -2) continue;
+
+
+
 		int fd = open(argv[0], O_RDWR);
 		if (fd == -1) {
 			if (rdbuf[0]) {
@@ -301,8 +326,8 @@ void shabby_shell(const char * tty_name)
  *****************************************************************************/
 void Init()
 {
-	int fd_stdin  = open("/dev_tty0", O_RDWR);
-	assert(fd_stdin  == 0);
+	int fd_stdin = open("/dev_tty0", O_RDWR);
+	assert(fd_stdin == 0);
 	int fd_stdout = open("/dev_tty0", O_RDWR);
 	assert(fd_stdout == 1);
 
@@ -310,21 +335,18 @@ void Init()
 
 	/* extract `cmd.tar' */
 	untar("/cmd.tar");
-			
 
-	char * tty_list[] = {"/dev_tty1", "/dev_tty2"};
+	char * tty_list[] = { "/dev_tty0" };
 
 	int i;
 	for (i = 0; i < sizeof(tty_list) / sizeof(tty_list[0]); i++) {
 		int pid = fork();
 		if (pid != 0) { /* parent process */
-			printf("[parent is running, child pid:%d]\n", pid);
 		}
 		else {	/* child process */
-			printf("[child is running, pid:%d]\n", getpid());
 			close(fd_stdin);
 			close(fd_stdout);
-			
+
 			shabby_shell(tty_list[i]);
 			assert(0);
 		}
