@@ -35,6 +35,8 @@ clean :
 realclean :
 	rm -f $(BIN) *.o
 
+build : final install
+
 kernel.bin :
 	cp ../kernel.bin ./
 
