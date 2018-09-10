@@ -20,6 +20,11 @@
 PRIVATE void showIntro();
 PRIVATE void showCmdList();
 PRIVATE void clearScreen();
+PRIVATE void cmd();
+PRIVATE void showAllFiles();
+PRIVATE void newFile(char*);
+PRIVATE void eraseFile(char*);
+PRIVATE void readFile(char*);
 /*****************************************************************************
  *                               kernel_main
  *****************************************************************************/
@@ -271,11 +276,11 @@ void shabby_shell(const char * tty_name)
 			p++;
 		} while(ch);
 		argv[argc] = 0;
-		if(strcmp(argv[0],"help")==0){
-			clearScreen();
-			showCmdList();
+		//Internal shell commands
+		if(cmd(argc,argv)){
 			continue;
 		}
+		//External application commands
 		int fd = open(argv[0], O_RDWR);
 		if (fd == -1) {
 			if (rdbuf[0]) {
@@ -401,11 +406,11 @@ PRIVATE void showIntro(){
            "/_/  /_/   _\\__, /  \\____/  /____/  \n"
            "          /____/                   \n");
 	   printf(
-           "___________________________ ____ _______\n"
+           " ______________________________________\n"
            "|  __________________________________  |\n"
            "| |                                  | |\n"
            "| |Type \"help\" to show command list| |\n"
-           "| |____________________________ _____| |\n"
+           "| |__________________________________| |\n"
            "|______________________________________|\n"
 	);
 }
@@ -430,4 +435,17 @@ PRIVATE void clearScreen(){
 		printf("\n");
 	}
 }
-		
+/*****************************************************************************
+ *			Get Command
+ ****************************************************************************/
+PRIVATE bool cmd(int argc, char*argv[]){
+	switch(argv[0]){
+		case "help":
+			clearScreen();
+			showCmdList();
+			break;
+		default:
+			return false;
+	}
+	return true;
+}
