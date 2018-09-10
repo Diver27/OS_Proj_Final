@@ -20,7 +20,7 @@
 PRIVATE void showIntro();
 PRIVATE void showCmdList();
 PRIVATE void clearScreen();
-PRIVATE void cmd(int,char**);
+PRIVATE int cmd(int,char**);
 PRIVATE void showAllFiles();
 PRIVATE void newFile(int,char**);
 PRIVATE void eraseFile(int,char**);
@@ -448,31 +448,24 @@ PRIVATE void clearScreen(){
 /*****************************************************************************
  *			             Get Command
  ****************************************************************************/
-PRIVATE bool cmd(int argc, char*argv[]){
-	switch(argv[0]){
-		case "help":
-			clearScreen();
-			showCmdList();
-			break;
-		case "show files":
-			showAllFiles()'
-			break;
-		case "new":
-			newFile(argc,argv);
-			break;
-		case "erase":
-			eraseFile(argc,argv);
-			break;
-		case "view":
-			readFile(argc,argv);
-			break;
-		case "edit":
-			editFile(argc,argv);
-			break;
-		default:
-			return false;
+PRIVATE int cmd(int argc, char*argv[]){
+	if(argv[0]=="help"){
+		clearScreen();
+		showCmdList();
+	}else if(argv[0]="show files"){
+		showAllFiles();
+	}else if(argv[0]=="new"){
+		newFile(argc,argv);
+	}else if(argv[0]=="erase"){
+		eraseFile(argc,argv);
+	}else if(argv[0]=="view"){
+		readFile(argc,argv);
+	}else if(argv[0]=="edit"){
+		editFile(argc,argv);
+	}else{
+		return 0;
 	}
-	return true;
+	return 1;
 }
 /*****************************************************************************
  *		             Show All Files
@@ -488,7 +481,7 @@ PRIVATE bool cmd(int argc, char*argv[]){
 	 }
 	 clearScreen();
 	 int i=0;
-	 for(int j=0;！bufr[j]；j++){
+	 for(int j=0;bufr[j]==0;j++){
 		 if(bufr[j]!=124){
 			 name[i++]=bufr[j];
 		 }
@@ -538,8 +531,8 @@ PRIVATE bool cmd(int argc, char*argv[]){
 		 return;
 	 }
 	 char bufr[FILE_MAX_SIZE];
-	 memset(buf,0,FILE_MAX_SIZE);
-	 write(fd,burr,FILE_MAX_SIZE);
+	 memset(bufr,0,FILE_MAX_SIZE);
+	 write(fd,bufr,FILE_MAX_SIZE);
 	 close(fd);
 	 printf("Succeed\n");
  }
@@ -572,8 +565,8 @@ PRIVATE bool cmd(int argc, char*argv[]){
 	 }
 	 printf("Type below (Press ENTER to quit):\n");
 	 char bufr[FILE_MAX_SIZE];
-	 memset(buf,0,FILE_MAX_SIZE);
-	 write(fd,burr,FILE_MAX_SIZE);
+	 memset(bufr,0,FILE_MAX_SIZE);
+	 write(fd,bufr,FILE_MAX_SIZE);
 	 int tail=read(0,bufr,FILE_MAX_SIZE);
 	 bufr[tail]==0;
 	 write(fd,bufr,strlen(bufr));
