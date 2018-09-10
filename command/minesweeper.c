@@ -286,7 +286,7 @@ void game() {
            		"____/|__/   \\____/ /_/ /_/ \n"
            		"                           \n");
             printRealMap();
-            break;
+	    printf("Type \"e\" to go back to menu;\n");
         }
         if (result){
             printf("________                           \n"
@@ -296,7 +296,7 @@ void game() {
            "/_____/  \\____/ \\____/ /_/ /_/ /_/ \n"
            "                                   \n");
             printRealMap();
-            break;
+	    printf("Type \"e\" to go back to menu;\n");
         }
         //clearScreen();
         //printDisplayMap();
