@@ -20,11 +20,16 @@
 PRIVATE void showIntro();
 PRIVATE void showCmdList();
 PRIVATE void clearScreen();
-PRIVATE void cmd();
+PRIVATE void cmd(int,char**);
 PRIVATE void showAllFiles();
-PRIVATE void newFile(char*);
-PRIVATE void eraseFile(char*);
-PRIVATE void readFile(char*);
+PRIVATE void newFile(int,char**);
+PRIVATE void eraseFile(int,char**);
+PRIVATE void readFile(int,char**);
+PRIVATE void editFile(int,char**);
+
+int FILENAME_MAX_SIZE=12;
+int FILE_MAX_SIZE=1024;
+
 /*****************************************************************************
  *                               kernel_main
  *****************************************************************************/
@@ -418,13 +423,18 @@ PRIVATE void showIntro(){
  *                           Command List
  *****************************************************************************/
 PRIVATE void showCmdList(){
-	printf("===============================\n"
+	printf("=======================================================\n"
 		"Shell Command List\n"
-		"==============================\n"
-		"help      :  Show the list of all shell commands.\n"
-		"echo      :  Print the arguments to the screen.\n"
-		"minesweeper:  Start Minesweeper game.\n"	
-		"==============================\n");
+		"==========================================================\n"
+		"help       		:  Show the list of all shell commands.\n"
+		"echo       		:  Print the arguments to the screen.\n"
+		"minesweeper		:  Start Minesweeper game.\n"	
+		"show files 		:  Show the list of all files.\n"
+		"new \'filename\'     :  Create a new file.\n"
+		"erase \'filename\'	:  Delete a file.\n"
+		"view \'filename\'	:  Open and view a file.\n"
+		"edit \'filename\'	:  Add content to a file.\n"
+		"==========================================================\n");
 	return 0;
 }
 /****************************************************************************
@@ -436,7 +446,7 @@ PRIVATE void clearScreen(){
 	}
 }
 /*****************************************************************************
- *			Get Command
+ *			             Get Command
  ****************************************************************************/
 PRIVATE bool cmd(int argc, char*argv[]){
 	switch(argv[0]){
@@ -444,8 +454,127 @@ PRIVATE bool cmd(int argc, char*argv[]){
 			clearScreen();
 			showCmdList();
 			break;
+		case "show files":
+			showAllFiles()'
+			break;
+		case "new":
+			newFile(argc,argv);
+			break;
+		case "erase":
+			eraseFile(argc,argv);
+			break;
+		case "view":
+			readFile(argc,argv);
+			break;
+		case "edit":
+			editFile(argc,argv);
+			break;
 		default:
 			return false;
 	}
 	return true;
 }
+/*****************************************************************************
+ *		             Show All Files
+ ****************************************************************************/
+ PRIVATE void showAllFiles(){
+	 char name[FILENAME_MAX_SIZE];
+	 memset(name,0,FILENAME_MAX_SIZE);
+	 char bufr[1024];
+	 memset(bufr,0,1024);
+	 if(list("\\",bufr)){
+		 printf("DIsk Access Denied!\n");
+		 return;
+	 }
+	 clearScreen();
+	 int i=0;
+	 for(int j=0;！bufr[j]；j++){
+		 if(bufr[j]!=124){
+			 name[i++]=bufr[j];
+		 }
+		 else{
+			 printf("%s\n",name);
+			 memset(name,0,FILENAME_MAX_SIZE);
+			 i=0;
+		 }
+	 }
+	 printf("\n\n");
+ }
+ /*****************************************************************************
+ *		             Read A File
+ ****************************************************************************/
+ PRIVATE void readFile(int argc, char* argv[]){
+	 char bufr[FILE_MAX_SIZE];
+	 memset(bufr,0,FILE_MAX_SIZE);
+	 if(argc==1){
+		 printf("A filename is required!\n");
+		 return;
+	 }
+	 int fd=open(argv[1],O_RDWR);
+	 if(fd==-1){
+		 printf("Invalid Filename.\n");
+		 return;
+	 }
+	 int tail=read(fd,bufr,FILE_MAX_SIZE);
+	 bufr[tail]=0;
+	 clearScreen();
+	 printf("%s\n",bufr);
+	 close(fd);
+ }
+ /*****************************************************************************
+ *		             Create A Files
+ ****************************************************************************/
+ PRIVATE void newFile(int argc,char* argv[]){
+	 if(argc==1){
+		 printf("A filename is required!\n");
+		 return;
+	 }else if(strlen(argv[1])>FILENAME_MAX_SIZE){
+		 printf("Filename can't be longer than %d characters!\n",FILENAME_MAX_SIZE);
+		 return;
+	 }
+	 int fd=open(argv[1],O_CREAT|O_RDWR);
+	 if(fd==-1){
+		 printf("Duplicate filename!\n");
+		 return;
+	 }
+	 char bufr[FILE_MAX_SIZE];
+	 memset(buf,0,FILE_MAX_SIZE);
+	 write(fd,burr,FILE_MAX_SIZE);
+	 close(fd);
+	 printf("Succeed\n");
+ }
+ /*****************************************************************************
+ *		             Delete A File
+ ****************************************************************************/
+ PRIVATE void eraseFile(int argc,char*argv[]){
+	 if(argc==1){
+		 printf("A filename is required!\n");
+		 return;
+	 }
+	 if(unlink(argv[1])==-1){
+		 printf("Invalid filename!\n");
+		 return;
+	 }
+	 printf("Succeed\n");
+ }
+ /*****************************************************************************
+ *		             Edit A File
+ ****************************************************************************/
+ PRIVATE void editFile(int argc,char*argv[]){
+	 if(argc==1){
+		printf("A filename is required!\n");
+		return;
+	 }
+	 int fd=open(argv[1],O_RDWR);
+	 if(fd==-1){
+		 printf("Invalid Filename.\n");
+		 return;
+	 }
+	 printf("Type below (Press ENTER to quit):\n");
+	 char bufr[FILE_MAX_SIZE];
+	 memset(buf,0,FILE_MAX_SIZE);
+	 write(fd,burr,FILE_MAX_SIZE);
+	 int tail=read(0,bufr,FILE_MAX_SIZE);
+	 bufr[tail]==0;
+	 write(fd,bufr,strlen(bufr));
+ }
