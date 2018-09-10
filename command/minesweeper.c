@@ -88,13 +88,14 @@ void printCommandList(){
     printf("*************************************************************\n"
            "***************          CommandList          ***************\n"
            "*************************************************************\n"
-           "m\tShift back to the menu.\n"
-           "s\tSweep the location (x, y), followed by the input of \"x y\".\n"
-           "p\tPin the location (x, y) where you think hides a bomb.\n"
-           "u\tRemove your pin on (x, y).\n"
-           "c\tShow the command list.\n"
-           "h\tPrint the real map.\n"
-           "n\tSweep a block safely.\n"
+           "e    Shift back to the menu.\n"
+	   "m    Show the game map.\n"
+           "s    Sweep the location (x, y), followed by the input of \"x y\".\n"
+           "p    Pin the location (x, y) where you think hides a bomb.\n"
+           "u    Remove your pin on (x, y).\n"
+           "c    Show the command list.\n"
+           "h    Print the real map.\n"
+           "n    Sweep a block safely.\n"
     );
 }
 
@@ -175,8 +176,7 @@ void safeSweep(int x, int y){//避免第一次炸死
             break;
         }
     }
-    char ch = countNearByMines(x, y);
-    displayMap[x][y] = ch + '0';
+    displayMap[x][y] = countNearByMines(x, y) + '0';
     clearUnknown(x, y);
 }
 
@@ -195,8 +195,7 @@ int countLeftUnknown(){//判断剩余未知区域的个数，个数为雷数时�
 int sweepMine(int x, int y){//扫雷函数，踩到雷返回1，没有踩到雷返回0
     int count = 0;
     if (realMap[x][y] == '0'){//没踩到雷
-        char ch = countNearByMines(x, y) + '0';
-        displayMap[x][y] = ch;//数字对应的ASCII值和数字字符对应的ASCII值相差48，即'0'的ASCII值
+        displayMap[x][y] = countNearByMines(x, y) + '0';//数字对应的ASCII值和数字字符对应的ASCII值相差48，即'0'的ASCII值
         clearUnknown(x, y);
     }
     else return 1;
@@ -210,15 +209,15 @@ void clearScreen(){
 }
 
 void pin(int x, int y) {
-    displayMap[x][y] = 'M';
-    clearScreen();
-    printDisplayMap();
+    if(displayMap[x][y] == '*'){
+        displayMap[x][y] = 'M';
+    }
 }
 
 void unpin(int x, int y){
-    displayMap[x][y] = '*';
-    clearScreen();
-    printDisplayMap();
+    if(displayMap[x][y] == 'M'){
+        displayMap[x][y] = '*';
+    }
 }
 
 
@@ -233,27 +232,52 @@ void game() {
         char bufr[128];
 	memset(bufr,0,128);
         read(0, bufr, 128);
+	clearScreen();
         if (bufr[0] == 's') {
+	    if(!((bufr[2] - '0') >= 1 && (bufr[2] -'0') <= 10 && (bufr[4] - '0') >= 1 && (bufr[4] - '0') <= 10)){
+	        printf("Your input is out of boud. Please make sure x and y are between 1 and 10.\n");
+		continue;
+	    }
             if(startFlag == 1){
                 safeSweep(bufr[2]-'0',bufr[4]-'0');
                 startFlag--;
             } else{
                 result = sweepMine(bufr[2]-'0',bufr[4]-'0'); //踩到雷返回1，没有踩到雷返回0
             }
-        } else if (bufr[0] == 'm'){
+	    printDisplayMap();
+        } else if (bufr[0] == 'e'){
             return;
         } else if (bufr[0] == 'h'){
-            clearScreen();
             printRealMap();
         } else if (bufr[0] == 'p'){
+	    if(!((bufr[2] - '0') >= 1 && (bufr[2] -'0') <= 10 && (bufr[4] - '0') >= 1 && (bufr[4] - '0') <= 10)){
+	        printf("Your input is out of boud. Please make sure x and y are between 1 and 10.\n");
+		continue;
+	    }
             pin(bufr[2]-'0',bufr[4]-'0');
+	    printDisplayMap();
         } else if (bufr[0] == 'u'){
+	    if(!((bufr[2] - '0') >= 1 && (bufr[2] -'0') <= 10 && (bufr[4] - '0') >= 1 && (bufr[4] - '0') <= 10)){
+	        printf("Your input is out of boud. Please make sure x and y are between 1 and 10.\n");
+		continue;
+	    }
             unpin(bufr[2]-'0',bufr[4]-'0');
+	    printDisplayMap();
         } else if (bufr[0] == 'c'){
             printCommandList();
+	    continue;
         } else if (bufr[0] == 'n'){
+	    clearScreen();
             safeSweep(bufr[2]-'0',bufr[4]-'0');
-        }
+	    printDisplayMap();
+	} else if (bufr[0] == 'm'){
+	    printDisplayMap();
+	    continue;
+        } else {
+	    printf("No such command. Please try again.\n");
+	    printDisplayMap();
+	    continue;
+	}
         if (countLeftUnknown() == MINENUM){
     		printf("___       __               \n"
            		"__ |     / /______ _______ \n"
@@ -274,8 +298,8 @@ void game() {
             printRealMap();
             break;
         }
-        clearScreen();
-        printDisplayMap();
+        //clearScreen();
+        //printDisplayMap();
     }
 }
 
@@ -288,15 +312,14 @@ int main() {
         read(0, bufr, 128);
         //switch (input) {
         if(bufr[0]=='1'){
-                game();
-               }else if(bufr[0]=='2'){
-                printCommandList();
-                }else if(bufr[0]=='0'){
-            
-                return 0;//退出游戏
+            game();
+           }else if(bufr[0]=='2'){
+            printCommandList();
+            }else if(bufr[0]=='0'){
+            return 0;//退出游戏
             }
-		else{
-                printf("Invalid\n");
+	else{
+            printf("Invalid command\n");
         }
         printStartPage();
     }
