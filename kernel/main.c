@@ -17,7 +17,9 @@
 #include "global.h"
 #include "proto.h"
 
-
+PRIVATE void showIntro();
+PRIVATE void showCmdList();
+PRIVATE void clearScreen();
 /*****************************************************************************
  *                               kernel_main
  *****************************************************************************/
@@ -240,6 +242,9 @@ void shabby_shell(const char * tty_name)
 	assert(fd_stdout == 1);
 
 	char rdbuf[128];
+	
+	clearScreen();
+	showIntro();
 
 	while (1) {
 		write(1, "$ ", 2);
@@ -266,13 +271,18 @@ void shabby_shell(const char * tty_name)
 			p++;
 		} while(ch);
 		argv[argc] = 0;
-
+		if(strcmp(argv[0],"help")==0){
+			clearScreen();
+			showCmdList();
+			continue;
+		}
 		int fd = open(argv[0], O_RDWR);
 		if (fd == -1) {
 			if (rdbuf[0]) {
 				write(1, "{", 1);
 				write(1, rdbuf, r);
-				write(1, "}\n", 2);
+				write(1, "}", 1);
+				write(1, " Invalid command\n",17);
 			}
 		}
 		else {
@@ -380,3 +390,44 @@ PUBLIC void panic(const char *fmt, ...)
 	__asm__ __volatile__("ud2");
 }
 
+/****************************************************************************
+ *                             Intro Page
+ *************************************************************************/
+PRIVATE void showIntro(){
+	   printf("______  ___         _______ ________\n"
+           "___   |/  /_____  ____  __ \\__  ___/\n"
+           "__  /|_/ / __  / / /_  / / /_____ \\ \n"
+           "_  /  / /  _  /_/ / / /_/ / ____/ / \n"
+           "/_/  /_/   _\\__, /  \\____/  /____/  \n"
+           "          /____/                   \n");
+	   printf(
+           "___________________________ ____ _______\n"
+           "|  __________________________________  |\n"
+           "| |                                  | |\n"
+           "| |Type \"help\" to show command list| |\n"
+           "| |____________________________ _____| |\n"
+           "|______________________________________|\n"
+	);
+}
+/*****************************************************************************
+ *                           Command List
+ *****************************************************************************/
+PRIVATE void showCmdList(){
+	printf("===============================\n"
+		"Shell Command List\n"
+		"==============================\n"
+		"help      :  Show the list of all shell commands.\n"
+		"echo      :  Print the arguments to the screen.\n"
+		"minesweeper:  Start Minesweeper game.\n"	
+		"==============================\n");
+	return 0;
+}
+/****************************************************************************
+ *                       Clear Screen
+ ****************************************************************************/
+PRIVATE void clearScreen(){
+	for(int i=0;i<25;i++){
+		printf("\n");
+	}
+}
+		
