@@ -480,7 +480,7 @@ PRIVATE int cmd(int argc, char*argv[]){
 	 }
 	 int tail=read(fd,bufr,FILE_MAX_SIZE);
 	 bufr[tail]=0;
-	 //clearScreen();
+	 clearScreen();
 	 printf("%s\n",bufr);
 	 close(fd);
  }
