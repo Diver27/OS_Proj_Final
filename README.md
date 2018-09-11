@@ -31,8 +31,23 @@ n|location x|location y|Hack：清扫(x,y)区块，且绝对不会踩到地雷
 
 #### 效果截图
 
-游戏启动界面
-![游戏启动界面](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10_17-58-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+游戏启动界面</br>
+![截图](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10_17-58-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+
+游戏开始界面</br>
+![截图](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10_17-58-38%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+
+游戏指令列表(图的上方 指令 "c")</br>
+![截图](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10_17-58-55%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+
+游戏中界面(指令 "s" (扫雷)输入位置 "3 3")</br>
+![截图](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10_17-59-22%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+
+结果</br>
+![截图](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10_17-59-44%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
+
+游戏失败界面(输入指令 "e" 返回主菜单)</br>
+![截图](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10_18-00-03%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png)
 
 ## 成员及分工
 
