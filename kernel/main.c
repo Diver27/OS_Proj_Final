@@ -18,17 +18,17 @@
 #include "proto.h"
 
 PRIVATE void showIntro();
-PRIVATE void showCmdList();
+PRIVATE int showCmdList();
 PRIVATE void clearScreen();
 PRIVATE int cmd(int,char**);
-PRIVATE void showAllFiles();
+//PRIVATE void showAllFiles();
 PRIVATE void newFile(int,char**);
 PRIVATE void eraseFile(int,char**);
 PRIVATE void readFile(int,char**);
 PRIVATE void editFile(int,char**);
 
 int FILENAME_MAX_SIZE=12;
-int FILE_MAX_SIZE=1024;
+int FILE_MAX_SIZE=512;
 
 /*****************************************************************************
  *                               kernel_main
@@ -282,7 +282,7 @@ void shabby_shell(const char * tty_name)
 		} while(ch);
 		argv[argc] = 0;
 		//Internal shell commands
-		if(cmd(argc,argv)){
+		if(cmd(argc,argv)==1){
 			continue;
 		}
 		//External application commands
@@ -422,14 +422,14 @@ PRIVATE void showIntro(){
 /*****************************************************************************
  *                           Command List
  *****************************************************************************/
-PRIVATE void showCmdList(){
+PRIVATE int showCmdList(){
 	printf("=======================================================\n"
 		"Shell Command List\n"
 		"==========================================================\n"
 		"help       		:  Show the list of all shell commands.\n"
 		"echo       		:  Print the arguments to the screen.\n"
 		"minesweeper		:  Start Minesweeper game.\n"	
-		"show files 		:  Show the list of all files.\n"
+		//"show files 		:  Show the list of all files.\n"
 		"new \'filename\'     :  Create a new file.\n"
 		"erase \'filename\'	:  Delete a file.\n"
 		"view \'filename\'	:  Open and view a file.\n"
@@ -449,18 +449,18 @@ PRIVATE void clearScreen(){
  *			             Get Command
  ****************************************************************************/
 PRIVATE int cmd(int argc, char*argv[]){
-	if(argv[0]=="help"){
+	if(strcmp(argv[0],"help")==0){
 		clearScreen();
 		showCmdList();
-	}else if(argv[0]="show files"){
-		showAllFiles();
-	}else if(argv[0]=="new"){
+	//}else if(argv[0]="show files"){
+		//showAllFiles();
+	}else if(strcmp(argv[0],"new")==0){
 		newFile(argc,argv);
-	}else if(argv[0]=="erase"){
+	}else if(strcmp(argv[0],"erase")==0){
 		eraseFile(argc,argv);
-	}else if(argv[0]=="view"){
+	}else if(strcmp(argv[0],"view")==0){
 		readFile(argc,argv);
-	}else if(argv[0]=="edit"){
+	}else if(strcmp(argv[0],"edit")==0){
 		editFile(argc,argv);
 	}else{
 		return 0;
@@ -469,7 +469,7 @@ PRIVATE int cmd(int argc, char*argv[]){
 }
 /*****************************************************************************
  *		             Show All Files
- ****************************************************************************/
+ ****************************************************************************
  PRIVATE void showAllFiles(){
 	 char name[FILENAME_MAX_SIZE];
 	 memset(name,0,FILENAME_MAX_SIZE);
@@ -493,7 +493,7 @@ PRIVATE int cmd(int argc, char*argv[]){
 	 }
 	 printf("\n\n");
  }
- /*****************************************************************************
+ *****************************************************************************
  *		             Read A File
  ****************************************************************************/
  PRIVATE void readFile(int argc, char* argv[]){
@@ -510,7 +510,7 @@ PRIVATE int cmd(int argc, char*argv[]){
 	 }
 	 int tail=read(fd,bufr,FILE_MAX_SIZE);
 	 bufr[tail]=0;
-	 clearScreen();
+	 //clearScreen();
 	 printf("%s\n",bufr);
 	 close(fd);
  }
@@ -533,6 +533,7 @@ PRIVATE int cmd(int argc, char*argv[]){
 	 char bufr[FILE_MAX_SIZE];
 	 memset(bufr,0,FILE_MAX_SIZE);
 	 write(fd,bufr,FILE_MAX_SIZE);
+	 //int n = write(fd, bufr, strlen(bufr));
 	 close(fd);
 	 printf("Succeed\n");
  }
