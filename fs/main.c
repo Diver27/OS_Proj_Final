@@ -27,7 +27,6 @@ PRIVATE void mkfs();
 PRIVATE void read_super_block(int dev);
 PRIVATE int fs_fork();
 PRIVATE int fs_exit();
-PUBLIC int fs_list();
 
 /*****************************************************************************
  *                                task_fs
@@ -63,9 +62,6 @@ PUBLIC void task_fs()
 		case UNLINK:
 			fs_msg.RETVAL = do_unlink();
 			break;
-		case LIST:
-			fs_msg.FD = fs_list();
-			break;
 		case RESUME_PROC:
 			src = fs_msg.PROC_NR;
 			break;
@@ -94,7 +90,6 @@ PUBLIC void task_fs()
 		msg_name[READ]   = "READ";
 		msg_name[WRITE]  = "WRITE";
 		msg_name[LSEEK]  = "LSEEK";
-		msg_name[LIST]  = "LIST";
 		msg_name[UNLINK] = "UNLINK";
 		/* msg_name[FORK]   = "FORK"; */
 		/* msg_name[EXIT]   = "EXIT"; */
@@ -108,7 +103,6 @@ PUBLIC void task_fs()
 		case OPEN:
 		case CLOSE:
 		case READ:
-		case LIST:
 		case WRITE:
 		case FORK:
 		case EXIT:
@@ -596,50 +590,5 @@ PRIVATE int fs_exit()
 			p->filp[i] = 0;
 		}
 	}
-	return 0;
-}
-
-PUBLIC int fs_list()
-{
-	int src = fs_msg.source;		/* caller proc nr. */
-	void* buf = fs_msg.BUF;
-	int bytes_rw = 0;
-	//memcpy(buf, "filesystem", 10);
-	/*phys_copy((void*)va2la(src, buf + bytes_rw),
-		  "filesystem",
-		  10);*/
-
-	struct inode* dir_inode = root_inode;
-
-	int dir_blk0_nr = dir_inode->i_start_sect;
-	int nr_dir_blks = (dir_inode->i_size + SECTOR_SIZE) / SECTOR_SIZE;
-	int nr_dir_entries =
-		dir_inode->i_size / DIR_ENTRY_SIZE; 
-	int m = 0;
-	struct dir_entry * pde;
-
-	int i, j;
-	for (i = 0; i < nr_dir_blks; i++) {
-		RD_SECT(dir_inode->i_dev, dir_blk0_nr + i);
-
-		pde = (struct dir_entry *)fsbuf;
-		for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++,pde++) {
-			if (++m > nr_dir_entries)
-				break;
-			if(pde->inode_nr != 0) {
-				phys_copy((void*)va2la(src, buf + bytes_rw),
-					  (void*)pde->name,
-					  strlen(pde->name));
-				bytes_rw += strlen(pde->name);
-				phys_copy((void*)va2la(src, buf + bytes_rw),
-					  "|",
-					  1);
-				bytes_rw += 1;
-			}
-		}
-		if (m > nr_dir_entries)/* all entries have been iterated or */
-			break;
-	}
-
 	return 0;
 }
