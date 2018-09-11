@@ -31,7 +31,7 @@ n|location x|location y|Hack：清扫(x,y)区块，且绝对不会踩到地雷
 
 #### 效果截图
 
-![游戏启动界面](https://github.com/theForerunner/OS_Proj_Final/doc_image/2018-09-10 17-58-23屏幕截图.png）
+![游戏启动界面](https://github.com/theForerunner/OS_Proj_Final/doc_image/2018-09-10_17-58-23屏幕截图.png）
 
 ## 成员及分工
 
