@@ -129,6 +129,9 @@ PUBLIC int	getpid		();
 /* lib/fork.c */
 PUBLIC int	fork		();
 
+/* lib/list.c */
+PUBLIC	int	list		(const char *pathname, void* buf);
+
 /* lib/exit.c */
 PUBLIC void	exit		(int status);
 
