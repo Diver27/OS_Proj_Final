@@ -31,6 +31,8 @@ n|location x|location y|Hack：清扫(x,y)区块，且绝对不会踩到地雷
 
 #### 效果截图
 
+![游戏启动界面](https://github.com/theForerunner/OS_Proj_Final/blob/master/doc_image/2018-09-10%2017-58-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png）
+
 ## 成员及分工
 
 学号|姓名|分工|分数占比
